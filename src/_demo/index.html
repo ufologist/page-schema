@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配页坊 Playground</title>
+    <link rel="stylesheet" href="//cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="//cdn.bootcss.com/monaco-editor/0.20.0/min/vs/editor/editor.main.css">
+    <style>
+    html,
+    body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    .player-box {
+        display: flex;
+        flex: 1;
+    }
+    .player-box__editor {
+        flex: 1;
+        overflow: hidden;
+    }
+    .player-box__player {
+        flex: 1;
+        border: none;
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <h1><a href="//github.com/ufologist/page-schema-player">配页坊</a> Playground</h1>
+        <form>
+            <label for="demoSelect">示例列表</label>
+            <select id="demoSelect"></select><button type="button" class="btn btn-link js-open-blank">在新窗口打开</button>
+        </form>
+    </div>
+    <div class="player-box">
+        <div class="player-box__editor js-editor">正在初始化编辑器...</div>
+        <iframe title="page schema player" class="player-box__player js-player"></iframe>
+    </div>
+    <script src="//cdn.bootcss.com/underscore.js/1.9.1/underscore-min.js"></script>
+    <script src="//cdn.bootcss.com/monaco-editor/0.20.0/min/vs/loader.js"></script>
+    <script>
+    (function() {
+        var playerEl = document.querySelector('.js-player');
+        var openBlankBtn = document.querySelector('.js-open-blank');
+        var demoFileBasePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        var editor;
+        var editorContentBlobUrl;
+
+        var demoFiles = `
+            audio.json
+            basic.js
+            carousel.json
+            chart.json
+            children.js
+            crud-aside.json
+            crud-columns.json
+            crud-fixed.json
+            crud-grid.json
+            crud-header-group.json
+            crud-item-actions.json
+            crud-list.json
+            crud-load-more.json
+            crud-load-once.json
+            crud-merge-cell.json
+            crud-nested.json
+            dialog-drawer.json
+            dialog-simple.json
+            form-combo.json
+            form-definitions.json
+            form-formula.json
+            form-full.json
+            form-ide.json
+            form-picker.json
+            form-reaction-crud.json
+            form-reaction-form.json
+            form-reaction-init-api.json
+            form-reaction-options.json
+            form-reaction-select-source.json
+            form-reaction.json
+            form-static.json
+            form-sub-form.json
+            form-table.json
+            form-tabs.json
+            form-validation.json
+            horizontal.json
+            iframe.json
+            linkpage-page.json
+            services-data.json
+            video.json
+            wizard.json
+        `.split('\n').map(function(name) {
+            return name.trim();
+        }).filter(function(name) {
+            return name;
+        }).forEach(function(name, index) {
+            var option = document.createElement('option');
+            option.value = `${demoFileBasePath}/${name}`;
+            option.textContent = `${index + 1}. ${option.value}`;
+            demoSelect.appendChild(option);
+        });
+        demoSelect.onchange = onDemoSelectChange;
+        openBlankBtn.onclick = function() {
+            window.open(getPlayerUrl(demoSelect.value));
+        }
+
+        require.config({
+            paths: {
+                'vs': '//cdn.bootcss.com/monaco-editor/0.20.0/min/vs'
+            }
+        });
+        require(['vs/editor/editor.main'], function() {
+            var editorEl = document.querySelector('.js-editor');
+            editorEl.textContent = '';
+
+            editor = monaco.editor.create(editorEl, {
+                value: '',
+                language: 'json',
+                theme: 'vs-dark'
+            });
+
+            var lazyRefreshPlayer = _.debounce(function() {
+                var content = editor.getValue();
+
+                // 优化性能, 没有语法错误时才去刷 player
+                try {
+                    eval(`(${content})`);
+
+                    if (editorContentBlobUrl) {
+                        URL.revokeObjectURL(editorContentBlobUrl);
+                    }
+                    editorContentBlobUrl = URL.createObjectURL(new Blob([content]));
+                    initPlayer(editorContentBlobUrl);
+                } catch (error) {
+                    console.log('页面配置文件存在语法错误');
+                }
+            }, 1000);
+            editor.onDidChangeModelContent(lazyRefreshPlayer);
+
+            onDemoSelectChange();
+        });
+
+        function initPlayer(schemaUrl) {
+            playerEl.src = getPlayerUrl(schemaUrl);
+        }
+        function getPlayerUrl(schemaUrl) {
+            return `/page-schema-player/index.html?_schema=${schemaUrl}`;
+        }
+
+        function onDemoSelectChange() {
+            fetch(`${demoSelect.value}?_=${Date.now()}`).then(function(response) {
+                return response.text();
+            }).then(function(text) {
+                if (editor) {
+                    editor.setValue(text);
+                }
+            }).catch(function(error) {
+                alert(`加载 schema 的内容失败: ${error}`);
+            });
+
+            // 如果编辑器加载有问题, 起码保证可以看到页面
+            if (!editor) {
+                initPlayer(demoSelect.value);
+            }
+        }
+    })();
+    </script>
+</body>
+</html>

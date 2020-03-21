@@ -16,7 +16,3 @@
 ## Playground
 
 [Playground](https://ufologist.github.io/page-schema/_demo/index.html)
-
-## 如何使用
-
-TODO

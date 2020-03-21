@@ -9,7 +9,7 @@
 [changelog-image]: https://img.shields.io/badge/CHANGE-LOG-blue.svg?style=flat-square
 [changelog-url]: https://github.com/ufologist/page-schema/blob/master/CHANGELOG.md
 
-本仓库用于存放基于 [AMis](https://github.com/baidu/amis) 配置出来的页面的配置文件, 例如 [advanced.js](./src/_demo/advanced.js)
+本仓库用于存放基于 [AMis](https://github.com/baidu/amis) 配置出来的页面的配置文件, 例如 [advanced.js](./src/_demo/advanced.js), 主要是为了服务于[配页坊项目: page-schema-player](https://github.com/ufologist/page-schema-player)
 
 ## Playground
 

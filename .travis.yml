@@ -7,8 +7,11 @@ node_js:
 before_script:
   - npm install -g gulp-cli@2.x
 
-script: echo "Running tests against $(node -v)..."
-script: npm run build
+script: 
+  - npm run build
+  - cp _config.yml dist
+  - cp README.md dist
+  - cp .gitignore dist
 
 deploy:
   provider: pages

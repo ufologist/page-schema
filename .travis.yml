@@ -8,12 +8,7 @@ before_script:
   - npm install -g gulp-cli@2.x
 
 script: echo "Running tests against $(node -v)..."
-
-jobs:
-  include:
-    - stage: build
-      node_js: node
-      script: npm run build
+script: npm run build
 
 deploy:
   provider: pages

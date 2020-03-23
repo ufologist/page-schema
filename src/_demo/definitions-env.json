@@ -1,0 +1,26 @@
+{
+    "$schema": "https://houtai.baidu.com/v2/schemas/page.json",
+    "type": "page",
+    "title": "环境配置示例",
+    "definitions": {
+        "env": {
+            "dev": {                                 // 环境模式
+                "api": "//mock.domain.com/mock/api", // 环境配置
+                "api1": "//mock.domain.com/mock1/api" 
+            },
+            "test": {
+                "api": "//test.domain.com/api",
+                "api1": "//test.domain.com/api"
+            },
+            "stage": {
+                "api": "//stage.domain.com/api",
+                "api1": "//stage.domain.com/api"
+            },
+            "production": {
+                "api": "//domain.com/api",
+                "api1": "//domain.com/api"
+            }
+        }
+    },
+    "body": "获取当前环境下配置的值: ${_env.api | raw}" // 直接使用 _env.xxx 来获取当前环境下各配置的值
+}

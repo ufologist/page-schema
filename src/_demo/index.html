@@ -41,13 +41,17 @@
         <div class="player-box__editor js-editor">正在初始化编辑器...</div>
         <iframe title="page schema player" class="player-box__player js-player"></iframe>
     </div>
+    <script src="//cdn.bootcss.com/qs/6.9.1/qs.min.js"></script>
     <script src="//cdn.bootcss.com/underscore.js/1.9.1/underscore-min.js"></script>
     <script src="//cdn.bootcss.com/monaco-editor/0.20.0/min/vs/loader.js"></script>
     <script>
     (function() {
+        var playgroundUrl = window.location.href.split('?')[0];
+        var demoFileBasePath = playgroundUrl.substring(0, playgroundUrl.lastIndexOf('/'));
+        var qsParam = Qs.parse(window.location.search.split('?')[1]);
+
         var playerEl = document.querySelector('.js-player');
         var openBlankBtn = document.querySelector('.js-open-blank');
-        var demoFileBasePath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
         var editor;
         var editorContentBlobUrl;
 
@@ -68,6 +72,7 @@
             crud-load-once.json
             crud-merge-cell.json
             crud-nested.json
+            definitions-env.json
             dialog-drawer.json
             dialog-simple.json
             form-combo.json
@@ -101,6 +106,9 @@
             var option = document.createElement('option');
             option.value = `${demoFileBasePath}/${name}`;
             option.textContent = `${index + 1}. ${option.value}`;
+            // 默认选中
+            option.selected = qsParam.schema === option.value;
+
             demoSelect.appendChild(option);
         });
         demoSelect.onchange = onDemoSelectChange;
@@ -152,6 +160,8 @@
         }
 
         function onDemoSelectChange() {
+            window.history.replaceState({}, '', `?schema=${demoSelect.value}`);
+
             fetch(`${demoSelect.value}?_=${Date.now()}`).then(function(response) {
                 return response.text();
             }).then(function(text) {

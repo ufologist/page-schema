@@ -52,8 +52,18 @@
 ## 如何配置出一个页面
 
 * 在 `src` 目录下新建一个页面的配置文件(1 个页面对应 1 个配置文件)
+  * 建议 `src` 下面的目录按照项目来划分文件夹
+  * 例如 `src/abc-admin` 即 abc 后台的页面都放在这一个文件夹下面, 并编写 `README.md` 说明一下
 * 配置文件可以是 `.json` 或者 `.js` 后缀, 具体如何配置请参考 [AMis 实用手册](https://github.com/ufologist/page-schema-player/blob/master/amis-cookbook.md)
 * 在开发阶段, 配置文件会由开发服务器 [svrx](https://github.com/svrxjs/svrx) 实时地做 `babel` 的转义, 主要是为了可以[无需注册就能够灵活地自定义组件](https://baidu.github.io/amis/docs/sdk#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6), `即：通过 children 实现一个自定义渲染方法，返回 React.ReactNode 节点`, 具体可以参考 [children.js](./src/_demo/children.js)
+
+## 环境配置
+
+在企业开发中, 为了隔离线上和线下, 开发过程中会涉及到多套服务器环境, 例如 dev/test/stage/production 这么几套环境
+
+为了能够在页面的配置文件中清晰的定义和使用多套环境, 我们通过 `definitions.env` 来集中定义环境模式和相应的环境配置, 具体配置请参考 [_demo/definitions-env.json](https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json)
+
+`page-schema-player` 会根据 [get-default-mode.ts](https://github.com/ufologist/page-schema-player/blob/master/src/ext/get-default-mode.ts) 自动识别使用哪一个环境模式, 但可以通过在 URL 参数 `_mode` 来指定一个环境模式, 例如指定使用 `stage` 环境模式: [https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json&_mode=stage](https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json&_mode=stage)
 
 ## 构建部署
 

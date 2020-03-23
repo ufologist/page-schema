@@ -58,8 +58,10 @@
 * 在开发阶段, 配置文件会由开发服务器 [svrx](https://github.com/svrxjs/svrx) 实时地做 `babel` 的转义, 主要是为了可以[无需注册就能够灵活地自定义组件](https://baidu.github.io/amis/docs/sdk#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6), `即：通过 children 实现一个自定义渲染方法，返回 React.ReactNode 节点`, 具体可以参考 [children.js](./src/_demo/children.js)
 
 PS: 针对不需要开发自定义组件就能够配置出来的页面, 建议运用好 Playground
-1. 先使用线上的 [Playground](https://ufologist.github.io/page-schema/_demo/index.html) 页面(即你私有化部署的 Playground 页面)可在线编辑页面的配置并实时地预览效果, 减少本地开发时需要不停地刷新 `page-schema-player` 页面来加载最新的本地页面配置文件以预览页面的效果
-2. 当配置得差不多时, 再将 Playground 编辑器中的内容 copy 出来, 保存为页面的配置文件, 使用线上的 `page-schema-player` 页面(即你私有化部署的 `page-schema-player` 页面)来加载本地的页面配置文件
+1. 复制你新建的页面配置文件的内容
+2. 打开线上的 [Playground](https://ufologist.github.io/page-schema/_demo/index.html) 页面(即你私有化部署的 Playground 页面), 将复制的内容粘帖到编辑器, 在这里修改配置并实时地预览效果, 减少本地开发时需要不停地刷新 `page-schema-player` 页面来加载最新的本地页面配置文件以预览页面的效果
+3. 当配置得差不多时, 再将 Playground 编辑器中的内容 copy 出来, 保存回你新建的页面配置文件
+4. 使用线上的 `page-schema-player` 页面(即你私有化部署的 `page-schema-player` 页面)来加载本地的页面配置文件
    * 例如 `https://ufologist.github.io/page-schema-player/index.html?_schema=http://localhost:8000/_demo/crud-load-once.json`
 
 ## 环境配置

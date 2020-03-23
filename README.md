@@ -46,8 +46,10 @@
                   ↓                                                ↓
     page-schema-player 页面的 URL                            页面配置文件的 URL
   ```
+* 针对不需要开发自定义组件就能够配置出来的页面, 只需要关注好页面的配置文件, 可以直接使用线上的 `page-schema-player` 页面(即你私有化部署的 `page-schema-player` 页面)
+  * 例如 `https://ufologist.github.io/page-schema-player/index.html?_schema=http://localhost:8000/_demo/crud-load-once.json`
 
-  了解更多关于 [page-schema-player](https://github.com/ufologist/page-schema-player)
+了解更多关于 [page-schema-player](https://github.com/ufologist/page-schema-player)
 
 ## 如何配置出一个页面
 

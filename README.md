@@ -61,7 +61,7 @@
 
 在企业开发中, 为了隔离线上和线下, 开发过程中会涉及到多套服务器环境, 例如 dev/test/stage/production 这么几套环境
 
-为了能够在页面的配置文件中清晰的定义和使用多套环境, 我们通过 `definitions.env` 来集中定义环境模式和相应的环境配置, 具体配置请参考 [_demo/definitions-env.json](https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json)
+为了能够在页面的配置文件中清晰的定义和使用多套环境, 我们通过 `definitions.env` 来集中定义环境模式和相应的环境配置, 具体配置请参考 [_demo/definitions-env.json](https://ufologist.github.io/page-schema/_demo/index.html?schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json)
 
 `page-schema-player` 会根据 [get-default-mode.ts](https://github.com/ufologist/page-schema-player/blob/master/src/ext/get-default-mode.ts) 自动识别使用哪一个环境模式, 但可以通过在 URL 参数 `_mode` 来指定一个环境模式, 例如指定使用 `stage` 环境模式: [https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json&_mode=stage](https://ufologist.github.io/page-schema-player/index.html?_schema=https://ufologist.github.io/page-schema/_demo/definitions-env.json&_mode=stage)
 

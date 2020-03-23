@@ -46,8 +46,6 @@
                   ↓                                                ↓
     page-schema-player 页面的 URL                            页面配置文件的 URL
   ```
-* 针对不需要开发自定义组件就能够配置出来的页面, 只需要关注好页面的配置文件, 可以直接使用线上的 `page-schema-player` 页面(即你私有化部署的 `page-schema-player` 页面)来加载本地的页面配置文件
-  * 例如 `https://ufologist.github.io/page-schema-player/index.html?_schema=http://localhost:8000/_demo/crud-load-once.json`
 
 了解更多关于 [page-schema-player](https://github.com/ufologist/page-schema-player)
 
@@ -58,6 +56,11 @@
   * 例如 `src/abc-admin` 即 abc 后台的页面都放在这一个文件夹下面, 并编写 `README.md` 说明一下
 * 配置文件可以是 `.json` 或者 `.js` 后缀, 具体如何配置请参考 [AMis 实用手册](https://github.com/ufologist/page-schema-player/blob/master/amis-cookbook.md)
 * 在开发阶段, 配置文件会由开发服务器 [svrx](https://github.com/svrxjs/svrx) 实时地做 `babel` 的转义, 主要是为了可以[无需注册就能够灵活地自定义组件](https://baidu.github.io/amis/docs/sdk#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6), `即：通过 children 实现一个自定义渲染方法，返回 React.ReactNode 节点`, 具体可以参考 [children.js](./src/_demo/children.js)
+
+PS: 针对不需要开发自定义组件就能够配置出来的页面, 建议运用好 Playground
+1. 先使用线上的 [Playground](https://ufologist.github.io/page-schema/_demo/index.html) 页面(即你私有化部署的 Playground 页面)可在线编辑页面的配置并实时地预览效果, 减少本地开发时需要不停地刷新 `page-schema-player` 页面来加载最新的本地页面配置文件以预览页面的效果
+2. 当配置得差不多时, 再将 Playground 编辑器中的内容 copy 出来, 保存为页面的配置文件, 使用线上的 `page-schema-player` 页面(即你私有化部署的 `page-schema-player` 页面)来加载本地的页面配置文件
+   * 例如 `https://ufologist.github.io/page-schema-player/index.html?_schema=http://localhost:8000/_demo/crud-load-once.json`
 
 ## 环境配置
 

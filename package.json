@@ -1,6 +1,6 @@
 {
   "name": "page-schema",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "基于 AMis 配置化的页面",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,7 @@
     "@babel/preset-react": "^7.7.0",
     "@svrx/cli": "^1.1.2",
     "del": "^5.1.0",
+    "glob": "^7.1.6",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-tap": "^2.0.0",

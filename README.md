@@ -49,6 +49,10 @@
 
 了解更多关于 [page-schema-player](https://github.com/ufologist/page-schema-player)
 
+PS: 打开 `http://localhost:8000/_ls` 可以列出所有的页面配置文件, 点击链接可以查看配置出来的页面
+
+![page-schema_ls](https://user-images.githubusercontent.com/167221/77515001-c2d20800-6eb2-11ea-913c-29752ca122f7.png)
+
 ## 如何配置出一个页面
 
 * 使用脚手架快速创建出一个页面的配置文件

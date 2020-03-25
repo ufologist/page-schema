@@ -1,0 +1,267 @@
+{
+    "$schema": "https://houtai.baidu.com/v2/schemas/page.json",
+    "type": "page",
+    "title": "<%= pageTitle %>",
+    "definitions": {
+        "env": {
+            "dev": {
+                "api": "<%= pageDefinitionsEnvApi %>"
+            },
+            "test": {
+                // TODO 根据实际情况修改成测试环境的接口的根路径
+                "api": "<%= pageDefinitionsEnvApi %>"
+            },
+            "stage": {
+                // TODO 根据实际情况修改成沙箱环境的接口的根路径
+                "api": "<%= pageDefinitionsEnvApi %>"
+            },
+            "production": {
+                // TODO 根据实际情况修改成生产环境的接口的根路径
+                "api": "<%= pageDefinitionsEnvApi %>"
+            }
+        },
+        "createOrUpdateForm": {
+            "body": {
+                "type": "form",
+                "autoFocus": "true",
+                "initApi": {
+                    "url": "${_env.api | raw}/amis-detail?id=${id}",
+                    adaptor: function(payload, response, api) {
+                        // TODO 如果修改时获取到的数据字段和提交时接口要求的字段不一致时可以在这里适配
+                        var data = {
+                            title: payload.data.title
+                        };
+
+                        payload.data = data;
+                        return payload;
+                    }
+                },
+                "initFetchOn": "data.id",
+                "api": {
+                    "method": "get",
+                    "url": "${_env.api | raw}/amis-success",
+                    "data": {
+                        "&": "$$",
+                        "selectMultipleField": "${selectMultipleField | split:,}"
+                    },
+                    "requestAdaptor": "api.url = api.url.replace(/\\[\\d\\]/g, '')",
+                    "adaptor": {
+                        "name": "silence-when-success"
+                    }
+                },
+                "controls": [
+                    {
+                        "name": "id",
+                        "type": "hidden"
+                    },
+                    {
+                        "label": "文本输入",
+                        "name": "title",
+                        "type": "text",
+                        "labelRemark": "标签的问号提示",
+                        "placeholder": "占位提示",
+                        "description": "一直提示",
+                        "hint": "焦点时提示",
+                        "required": true,
+                        "disabledOn": "data.id"
+                    }
+                ]
+            }
+        }
+    },
+    "toolbar": [
+        <% if (pageToolbar) { %>
+        {
+            "type": "button",
+            "actionType": "dialog",
+            "label": "新增",
+            "icon": "fa fa-plus pull-left",
+            "primary": true,
+            "dialog": {
+                "title": "新增",
+                "size": "lg",
+                "$ref": "createOrUpdateForm"
+            }
+        }
+        <% } %>
+    ],
+    "body": {
+        "type": "crud",
+        "perPageField": "pageSize",
+        "itemCheckableOn": "data.checkable",
+        "filterTogglable": true,
+        "api": {
+            "url": "${_env.api | raw}<%= pageBodyApiUrl %>",
+            "data": {
+                "&": "$$"
+            },
+            "adaptor": {
+                "name": "curd-content-totalElements"
+            }
+        },
+        <% if (pageBodyBulkActions) { %>
+        "bulkActions": [
+            {
+                "label": "批量删除",
+                "actionType": "ajax",
+                "api": {
+                    "url": "${_env.api | raw}/amis-success",
+                    "dataType": "form",
+                    "qsOptions": {
+                        "arrayFormat": "repeat"
+                    },
+                    "data": {
+                        "id": "${ids | split:,}"
+                    }
+                },
+                "confirmText": "确定要批量删除吗?"
+            },
+            {
+                "label": "批量修改",
+                "actionType": "dialog",
+                "dialog": {
+                    "title": "批量编辑",
+                    "body": {
+                        "type": "form",
+                        "api": {
+                            "url": "${_env.api | raw}/amis-success",
+                            "dataType": "form",
+                            "qsOptions": {
+                                "arrayFormat": "repeat"
+                            },
+                            "data": {
+                                "&": "$$",
+                                "id": "${ids | split:,}"
+                            }
+                        },
+                        "controls": [
+                            {
+                                "type": "hidden",
+                                "name": "ids"
+                            },
+                            {
+                                "type": "text",
+                                "name": "title",
+                                "label": "标题"
+                            }
+                        ]
+                    }
+                }
+            }
+        ],
+        <% } %>
+        "headerToolbar": [
+            <% if (pageBodyFilter) { %> "filter-toggler", <% } %>
+            <% if (pageBodyBulkActions) { %> "bulkActions", <% } %>
+            {
+                "type": "columns-toggler",
+                "align": "right"
+            },
+            {
+                "type": "pagination",
+                "align": "right"
+            }
+        ],
+        "footerToolbar": [
+            "statistics",
+            "switch-per-page",
+            "pagination"
+        ],
+        <% if (pageBodyFilter) { %>
+        "filter": {
+            "title": "查询条件",
+            "controls": [
+                {
+                    "type": "text",
+                    "name": "title",
+                    "placeholder": "通过关键字搜索",
+                    "addOn": {
+                        "label": "搜索",
+                        "type": "submit"
+                    }
+                }
+            ],
+            "actions": [
+                {
+                    "type": "submit",
+                    "label": "查询",
+                    "primary": true
+                },
+                {
+                    "type": "reset",
+                    "label": "重置"
+                }
+            ]
+        },
+        <% } %>
+        "columns": [
+            <% pageBodyColumns.split(' ').forEach(function(column) { %>
+            {
+                "label": "<%= column.split(':')[1] %>",
+                "name": "<%= column.split(':')[0] %>"
+            },
+            <% }) %>
+            {
+                "type": "operation",
+                "label": "操作",
+                "width": 100,
+                "buttons": [
+                    <% if (pageBodyColumnOperationView) { %>
+                    {
+                        "type": "button",
+                        "icon": "fa fa-eye",
+                        "actionType": "dialog",
+                        "tooltip": "查看",
+                        "dialog": {
+                            "title": "查看",
+                            "actions": [],
+                            "body": {
+                                "type": "form",
+                                "controls": [{
+                                    "label": "ID",
+                                    "name": "id",
+                                    "type": "static"
+                                }, {
+                                    "label": "标题",
+                                    "name": "title",
+                                    "type": "static"
+                                }]
+                            }
+                        }
+                    },
+                    <% } %>
+                    <% if (pageBodyColumnOperationUpdate) { %>
+                    {
+                        "type": "button",
+                        "icon": "fa fa-pencil",
+                        "actionType": "dialog",
+                        "tooltip": "修改",
+                        "dialog": {
+                            "title": "修改",
+                            "size": "lg",
+                            "$ref": "createOrUpdateForm"
+                        }
+                    },
+                    <% } %>
+                    <% if (pageBodyColumnOperationDelete) { %>
+                    {
+                        "type": "button",
+                        "icon": "fa fa-times text-danger",
+                        "actionType": "ajax",
+                        "tooltip": "删除",
+                        "confirmText": "您确认要删除吗?",
+                        "api": {
+                            "method": "post",
+                            "url": "${_env.api | raw}/amis-success",
+                            "dataType": "form",
+                            "data": {
+                                "id": "${id}"
+                            }
+                        }
+                    }
+                    <% } %>
+                ]
+            }
+        ]
+    }
+}

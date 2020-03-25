@@ -1,0 +1,408 @@
+{
+  "$schema": "https://houtai.baidu.com/v2/schemas/page.json",
+  "type": "page",
+  "title": "增删改查示例",
+  "definitions": {
+    "env": {
+      "dev": {
+        "api": "https://www.fastmock.site/mock/b9e4b4bc8121846e696221f4105cec52/test"
+      },
+      "test": {
+        "api": "https://www.fastmock.site/mock/b9e4b4bc8121846e696221f4105cec52/test"
+      },
+      "stage": {
+        "api": "https://www.fastmock.site/mock/b9e4b4bc8121846e696221f4105cec52/test"
+      },
+      "production": {
+        "api": "https://www.fastmock.site/mock/b9e4b4bc8121846e696221f4105cec52/test"
+      }
+    },
+    "createOrUpdateForm": {
+      "body": {
+        "type": "form",
+        "autoFocus": "true",
+        "initApi": {
+          "url": "${_env.api | raw}/amis-detail?id=${id}",
+          adaptor: function adaptor(payload, response, api) {
+            var data = {
+              title: payload.data.title,
+              textareaField: payload.data.textareaField,
+              name: payload.data.name,
+              phone: payload.data.phone,
+              numberField: payload.data.numberField,
+              selectField: payload.data.selectField,
+              selectMultipleField: payload.data.selectMultipleField,
+              time: payload.data.time,
+              videoUrl: payload.data.videoUrl,
+              picUrl: payload.data.photoUrl,
+              checkboxesField: payload.data.checkboxesField,
+              radiosField: payload.data.radiosField,
+              a: payload.data.a,
+              b: payload.data.b
+            }; // 由于修改时获取到的字段和提交时的不是一致
+
+            payload.data = data;
+            return payload;
+          }
+        },
+        "initFetchOn": "data.id",
+        "api": {
+          "method": "get",
+          "url": "${_env.api | raw}/amis-success",
+          "data": {
+            "&": "$$",
+            "selectMultipleField": "${selectMultipleField | split:,}"
+          },
+          "requestAdaptor": "api.url = api.url.replace(/\\[\\d\\]/g, '')",
+          "adaptor": {
+            "name": "silence-when-success"
+          }
+        },
+        "controls": [{
+          "name": "id",
+          "type": "hidden"
+        }, {
+          "label": "文本输入",
+          "name": "title",
+          "type": "text",
+          "labelRemark": "标签的问号提示",
+          "placeholder": "占位提示",
+          "description": "一直提示",
+          "hint": "焦点时提示",
+          "required": true
+        }, {
+          "label": "多行文本输入",
+          "name": "textareaField",
+          "type": "textarea",
+          "required": true,
+          "validations": {
+            "minLength": 10,
+            "maxLength": 100
+          }
+        }, {
+          "type": "group",
+          "controls": [{
+            "label": "姓名",
+            "name": "name",
+            "disabledOn": "data.id",
+            "type": "text",
+            "required": true
+          }, {
+            "label": "手机号码",
+            "name": "phone",
+            "type": "text",
+            "required": true,
+            "validations": "isPhone"
+          }, {
+            "label": "数字",
+            "name": "numberField",
+            "type": "number",
+            "required": true,
+            "min": 1,
+            "max": 10,
+            "step": 0.1,
+            "precision": 2
+          }]
+        }, {
+          "type": "group",
+          "controls": [{
+            "label": "下拉单选",
+            "name": "selectField",
+            "type": "select",
+            "source": {
+              "url": "${_env.api | raw}/amis-select",
+              "adaptor": {
+                "name": "select-describe-value"
+              }
+            },
+            "required": true
+          }, {
+            "label": "下拉多选",
+            "name": "selectMultipleField",
+            "type": "select",
+            "multiple": true,
+            "checkAll": true,
+            "source": {
+              "url": "${_env.api | raw}/amis-select",
+              "adaptor": {
+                "name": "select-describe-value"
+              }
+            },
+            "required": true
+          }, {
+            "label": "时间",
+            "name": "time",
+            "type": "date",
+            "format": "YYYY-MM-DD",
+            "required": true
+          }]
+        }, {
+          "label": "上传文件",
+          "name": "videoUrl",
+          "type": "file",
+          "description": "请上传文件大小小于80M的MP4文件",
+          "reciever": "${_env.api | raw}/amis-upload-video",
+          "accept": "video/mp4",
+          "maxSize": 83886080,
+          "required": true
+        }, {
+          "label": "文件地址",
+          "name": "videoUrl",
+          "type": "static",
+          "required": true
+        }, {
+          "label": "上传图片",
+          "name": "picUrl",
+          "type": "image",
+          "description": "请上传尺寸272*344px的png/jpg文件",
+          "reciever": {
+            "url": "${_env.api | raw}/amis-upload-pic",
+            "adaptor": {
+              "name": "filter:pick:value~data"
+            }
+          },
+          "limit": {
+            "width": 272,
+            "height": 344
+          },
+          "required": true
+        }, {
+          "label": "多选框",
+          "name": "checkboxesField",
+          "type": "checkboxes",
+          "checkAll": true,
+          "inline": true,
+          "options": [{
+            "label": "选项1",
+            "value": 1
+          }, {
+            "label": "选项2",
+            "value": 2
+          }],
+          "required": true
+        }, {
+          "label": "单选框",
+          "name": "radiosField",
+          "type": "radios",
+          "inline": true,
+          "options": [{
+            "label": "是",
+            "value": 1
+          }, {
+            "label": "否",
+            "value": 0
+          }],
+          "required": true
+        }, {
+          "label": "联动关系",
+          "name": "a",
+          "type": "radios",
+          "inline": true,
+          "options": [{
+            "label": "是",
+            "value": 1
+          }, {
+            "label": "否",
+            "value": 0
+          }],
+          "required": true
+        }, {
+          "label": "联动输入",
+          "name": "b",
+          "type": "text",
+          "required": true,
+          "visibleOn": "data.a == 1"
+        }]
+      }
+    }
+  },
+  "toolbar": [{
+    "type": "button",
+    "actionType": "dialog",
+    "label": "新增",
+    "icon": "fa fa-plus pull-left",
+    "primary": true,
+    "dialog": {
+      "title": "新增",
+      "size": "lg",
+      "$ref": "createOrUpdateForm"
+    }
+  }],
+  "body": {
+    "type": "crud",
+    "perPageField": "pageSize",
+    "itemCheckableOn": "data.checkable",
+    "filterTogglable": true,
+    "api": {
+      "url": "${_env.api | raw}/amis-list",
+      "data": {
+        "&": "$$"
+      },
+      "adaptor": {
+        "name": "curd-content-totalElements"
+      }
+    },
+    "bulkActions": [{
+      "label": "批量删除",
+      "actionType": "ajax",
+      "api": {
+        "url": "${_env.api | raw}/amis-success",
+        "dataType": "form",
+        "qsOptions": {
+          "arrayFormat": "repeat"
+        },
+        "data": {
+          "id": "${ids | split:,}"
+        }
+      },
+      "confirmText": "确定要批量删除吗?"
+    }, {
+      "label": "批量修改",
+      "actionType": "dialog",
+      "dialog": {
+        "title": "批量编辑",
+        "body": {
+          "type": "form",
+          "api": {
+            "url": "${_env.api | raw}/amis-success",
+            "dataType": "form",
+            "qsOptions": {
+              "arrayFormat": "repeat"
+            },
+            "data": {
+              "&": "$$",
+              "id": "${ids | split:,}"
+            }
+          },
+          "controls": [{
+            "type": "hidden",
+            "name": "ids"
+          }, {
+            "type": "text",
+            "name": "title",
+            "label": "标题"
+          }]
+        }
+      }
+    }],
+    "headerToolbar": ["filter-toggler", "bulkActions", {
+      "type": "columns-toggler",
+      "align": "right"
+    }, {
+      "type": "pagination",
+      "align": "right"
+    }],
+    "footerToolbar": ["statistics", "switch-per-page", "pagination"],
+    "filter": {
+      "title": "查询条件",
+      "controls": [{
+        "type": "text",
+        "name": "title",
+        "placeholder": "通过关键字搜索",
+        "addOn": {
+          "label": "搜索",
+          "type": "submit"
+        }
+      }],
+      "actions": [{
+        "type": "submit",
+        "label": "查询",
+        "primary": true
+      }, {
+        "type": "reset",
+        "label": "重置"
+      }]
+    },
+    "columns": [{
+      "label": "ID",
+      "name": "id",
+      "copyable": true
+    }, {
+      "label": "标题",
+      "name": "title",
+      "type": "tpl",
+      "tpl": "<% if (data.status) { %><span class='label label-danger'>置顶</span><% } %><%= data.title %>"
+    }, {
+      "label": "图片链接",
+      "name": "picUrl",
+      "popOver": {
+        "title": "预览图片",
+        "body": {
+          "type": "image",
+          "src": "${picUrl}"
+        }
+      }
+    }, {
+      "label": "图片",
+      "name": "picUrl",
+      "type": "image",
+      "enlargeAble": true,
+      "title": "${title}"
+    }, {
+      "label": "视频链接",
+      "name": "videoUrl",
+      "popOver": {
+        "title": "预览视频",
+        "body": {
+          "type": "video",
+          "src": "${videoUrl}",
+          "autoPlay": true,
+          "rates": [1, 1.5, 2]
+        }
+      }
+    }, {
+      "label": "修改时间",
+      "name": "updateTime"
+    }, {
+      "type": "operation",
+      "label": "操作",
+      "width": 100,
+      "buttons": [{
+        "type": "button",
+        "icon": "fa fa-eye",
+        "actionType": "dialog",
+        "tooltip": "查看",
+        "dialog": {
+          "title": "查看",
+          "actions": [],
+          "body": {
+            "type": "form",
+            "controls": [{
+              "label": "ID",
+              "name": "id",
+              "type": "static"
+            }, {
+              "label": "标题",
+              "name": "title",
+              "type": "static"
+            }]
+          }
+        }
+      }, {
+        "type": "button",
+        "icon": "fa fa-pencil",
+        "actionType": "dialog",
+        "tooltip": "修改",
+        "dialog": {
+          "title": "修改",
+          "size": "lg",
+          "$ref": "createOrUpdateForm"
+        }
+      }, {
+        "type": "button",
+        "icon": "fa fa-times text-danger",
+        "actionType": "ajax",
+        "tooltip": "删除",
+        "confirmText": "您确认要删除吗?",
+        "api": {
+          "method": "post",
+          "url": "${_env.api | raw}/amis-success",
+          "dataType": "form",
+          "data": {
+            "id": "${id}"
+          }
+        }
+      }]
+    }]
+  }
+}

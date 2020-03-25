@@ -51,9 +51,39 @@
 
 ## 如何配置出一个页面
 
-* 在 `src` 目录下新建一个页面的配置文件(1 个页面对应 1 个配置文件)
+* 使用脚手架快速创建出一个页面的配置文件
+  * `src` 目录下的 1 个配置文件对应 1 个页面
   * 建议 `src` 下面的目录按照项目来划分文件夹
   * 例如 `src/abc-admin` 即 abc 后台的页面都放在这一个文件夹下面, 并编写 `README.md` 说明一下
+
+  ```
+  > npm run new-page
+
+  > page-schema@1.1.0 new-page page-schema
+  > sao ./scaffold/schema-template ./src
+  
+  ? 请输入你要创建的页面配置文件名(英文), 需要包含文件夹路径(不需要带后缀), 例如: test/list test/list
+  ? 请输入页面标题-title 页面标题
+  ? 请输入接口的根路径-definitions.env.api https://www.fastmock.site/mock/b9e4b4bc8121846e696221f4105cec52/test
+  ? 请输入列表接口路径-body.api.url /amis-list
+  ? 请输入表格字段(多个以空格隔开)-body.columns id:ID title:标题
+  ? 表格是否需要查看的操作按钮-body.columns operation Yes
+  ? 表格是否需要修改的操作按钮-body.columns operation Yes
+  ? 表格是否需要删除的操作按钮-body.columns operation Yes
+  ? 表格是否需要批量操作功能-body.bulkActions Yes
+  ? 页面是否需要查询条件面板-body.filter Yes
+  ? 页面是否需要"新增"按钮-toolbar Yes
+  info Created src\test\_schema.json
+  info Moved src\test\_schema.json -> src\test\list.json
+  success Generated into \page-schema\src\test
+  ----------------------------------------------------------------
+  （*＾-＾*）: 恭喜你创建页面成功
+  （*＾-＾*）: b(￣▽￣*)=====b
+  （*＾-＾*）: 主人~将为你打开浏览器
+  https://ufologist.github.io/page-schema-player/index.html?_schema=http://localhost:8000/test/list.json&_mode=dev
+  ----------------------------------------------------------------
+  ```
+
 * 配置文件可以是 `.json` 或者 `.js` 后缀, 具体如何配置请参考 [AMis 实用手册](https://github.com/ufologist/page-schema-player/blob/master/amis-cookbook.md)
 * 在开发阶段, 配置文件会由开发服务器 [svrx](https://github.com/svrxjs/svrx) 实时地做 `babel` 的转义, 主要是为了可以[无需注册就能够灵活地自定义组件](https://baidu.github.io/amis/docs/sdk#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6), `即：通过 children 实现一个自定义渲染方法，返回 React.ReactNode 节点`, 具体可以参考 [children.js](./src/_demo/children.js)
 

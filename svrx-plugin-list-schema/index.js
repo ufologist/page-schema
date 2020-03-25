@@ -123,7 +123,11 @@ function createPageHtml(fileContents) {
                     // 找到上一层
                     document.querySelector('[data-path="' + parentPath + '"] ul').appendChild(element);
                 } else {
-                    element.innerHTML = '<div>' + path + '</div><ul></ul>';
+                    if (isFile) {
+                        element.innerHTML = '<div>' + createPlayerLink(item) + '</div>';
+                    } else {
+                        element.innerHTML = '<div>' + path + '</div><ul></ul>';
+                    }
                     schemaListUlEl.appendChild(element);
                 }
             }

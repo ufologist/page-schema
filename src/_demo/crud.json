@@ -414,6 +414,7 @@
                         "icon": "fa fa-eye",
                         "actionType": "dialog",
                         "tooltip": "查看",
+                        "visibleOn": "data.checkable",
                         "dialog": {
                             "title": "查看",
                             "actions": [],

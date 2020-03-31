@@ -264,7 +264,8 @@
             },
             "adaptor": {
                 "name": "curd-content-totalElements"
-            }
+            },
+            "_unauthorized": "demo"
         },
         "bulkActions": [
             {

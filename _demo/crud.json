@@ -240,7 +240,8 @@
       },
       "adaptor": {
         "name": "curd-content-totalElements"
-      }
+      },
+      "_unauthorized": "demo"
     },
     "bulkActions": [{
       "label": "批量删除",

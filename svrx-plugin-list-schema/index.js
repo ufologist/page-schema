@@ -1,53 +1,25 @@
-var fs = require('fs');
 var path = require('path');
 
 var glob = require('glob');
-const babel = require("@babel/core");
 
-function transformCode(string) {
-    var code = '(' + string + ')';
-    try {
-        code = babel.transformSync(code, {
-            // not in strict mode
-            // https://babeljs.io/docs/en/options#sourcetype
-            sourceType: 'script',
-        }).code;
-    } catch (error) {
-        console.warn('babel.transformSync error', error);
-    }
-    // 剥离首尾的括号
-    code = code.substring(1, code.length - 2);
-
-    return code;
-}
-
-function getSchemaFileContents() {
+function getSchemaFiles() {
     return new Promise(function(resolve, reject) {
         glob('./src/**/*.{json,js}', {}, function(error, files) {
             if (!error) {
-                var fileContents = files.map(function(item) {
+                var schemaFiles = files.map(function(item) {
                     var urlPath = path.posix.relative('./src', item);
-
-                    var schemaTitle = item;
-                    try {
-                        var fileContent = fs.readFileSync(path.resolve(process.cwd(), item));
-                        // 放弃使用正则匹配出 schema 文件字符串内容中的 title 的内容, 因为太难搞了
-                        // 改用开销较大的实际转义代码, 再获取真实对象的方式
-                        var code = transformCode(fileContent);
-
-                        var schema = eval(`(${code})`);
-                        schemaTitle = schema.title;
-                    } catch (error) {
-                        console.warn('eval code error', error);
-                    }
-
+                    // {
+                    //     file: './src/_demo/advanced.js',
+                    //     urlPath: '_demo/advanced.js',
+                    //     title: '_demo/advanced.js'
+                    // }
                     return {
                         file: item,
                         urlPath: urlPath,
-                        title: schemaTitle
+                        title: urlPath
                     };
                 });
-                resolve(fileContents);
+                resolve(schemaFiles);
             } else {
                 reject(error);
             }
@@ -55,7 +27,7 @@ function getSchemaFileContents() {
     });
 }
 
-function createPageHtml(fileContents) {
+function createPageHtml(schemaFiles) {
     return `
 <!DOCTYPE html>
 <html lang="en">
@@ -71,7 +43,7 @@ function createPageHtml(fileContents) {
     <ul class="js-schema-list"></ul>
     <script>
     (function() {
-        var fileContents = ${JSON.stringify(fileContents)};
+        var schemaFiles = ${JSON.stringify(schemaFiles)};
 
         function getSegment(urlPath) {
             var indexOfPosition = 0;
@@ -93,7 +65,7 @@ function createPageHtml(fileContents) {
             var schemaUrl = 'http://localhost:8000/' + item.urlPath;
             var playSchemaUrl = playerUrl + '?_schema=' + schemaUrl + '&_mode=dev';
 
-            return '<a target="_blank" data-balloon-pos="right" aria-label="' + item.file + '" href="' + playSchemaUrl + '" >' + item.title + '</a>';
+            return '<a class="js-schema" data-url-path="' + item.urlPath + '" data-file="' + item.file + '" target="_blank" data-balloon-pos="right" aria-label="' + item.file + '" href="' + playSchemaUrl + '">' + item.title + '</a>';
         }
 
         function initList(path, index, item) {
@@ -133,12 +105,26 @@ function createPageHtml(fileContents) {
             }
         }
 
-        document.querySelector('.js-list-length').textContent = fileContents.length;
+        document.querySelector('.js-list-length').textContent = schemaFiles.length;
         var schemaListUlEl = document.querySelector('.js-schema-list');
-        fileContents.forEach(function(item) {
+        schemaFiles.forEach(function(item) {
             item.segment = getSegment(item.urlPath);
             item.segment.forEach(function(path, index) {
                 initList(path, index, item);
+            });
+        });
+
+        // 加载一次 schema 文件的内容来获取标题
+        document.querySelectorAll('.js-schema').forEach(function(el) {
+            var dataset = el.dataset || {};
+            fetch('/' + dataset.urlPath + '?_=' + Date.now()).then(function(response) {
+                return response.text();
+            }).then(function(text) {
+                return eval('(' + text + ')');
+            }).then(function(schema) {
+                if (typeof schema.title !== 'undefined' && String(schema.title).trim()) {
+                    el.textContent = schema.title;
+                }
             });
         });
     })();
@@ -156,11 +142,11 @@ module.exports = {
 
             route(({ get }) => {
                 get('/_ls').to.handle(async (ctx, next) => {
-                    var fileContents = await getSchemaFileContents();
+                    var schemaFiles = await getSchemaFiles();
                     await next();
 
                     ctx.type = 'html';
-                    ctx.body = createPageHtml(fileContents);
+                    ctx.body = createPageHtml(schemaFiles);
                 });
             });
         }

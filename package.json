@@ -1,6 +1,6 @@
 {
   "name": "page-schema",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "基于 AMis 配置化的页面",
   "main": "index.js",
   "scripts": {

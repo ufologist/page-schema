@@ -4,22 +4,33 @@
     "title": "自定义组件示例",
     "body": {
         "type": "form",
+        "mode": "horizontal",
+        "initApi": "https://houtai.baidu.com/api/mock2/page/initData",
         "controls": [
             {
-                "type": "text",
-                "label": "用户名",
-                "name": "usename"
+                "type": "static",
+                "label": "日期",
+                "name": "date"
             },
             {
-                "name": "a",
+                "name": "title",
                 "children": ({
                     value,
                     onChange
                 }) => (
-                    <div>
-                        <p>这个是个自定义组件</p>
-                        <p>当前值：{value}</p>
-                        <a className="btn btn-default" onClick={() => onChange(Math.round(Math.random() * 10000))}>随机修改</a>
+                    <div class="a-Form-item a-Form-item--horizontal">
+                        <label class="a-Form-label a-Form-itemColumn--2">字段</label>
+                        <div class="a-Form-value">
+                            <div class="form-control-static">
+                                <div class="a-Form-control">
+                                    <span class="a-TplField">{value}</span>
+                                    <a className="btn btn-link btn-xs" onClick={(event) => {
+                                        event.target.parentNode.removeChild(event.target);
+                                        onChange(Math.round(Math.random() * 10000));
+                                    }}>查看</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 )
             }

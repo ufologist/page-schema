@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.2.2 2020-4-13
+
+  * fix: 优化 list-schema 插件支持从不同的端口启动服务器
+
 * v1.2.1 2020-4-1
 
   * feat: 优化 list-schema 插件获取 schema 文件内容的性能

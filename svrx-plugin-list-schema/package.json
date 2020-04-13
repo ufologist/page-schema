@@ -1,6 +1,6 @@
 {
   "name": "svrx-plugin-list-schema",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "列出所有的 schema 文件",
   "main": "index.js",
   "scripts": {

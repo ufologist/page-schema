@@ -62,7 +62,7 @@ function createPageHtml(schemaFiles) {
 
         function createPlayerLink(item) {
             var playerUrl = 'https://ufologist.github.io/page-schema-player/index.html';
-            var schemaUrl = 'http://localhost:8000/' + item.urlPath;
+            var schemaUrl = window.location.protocol + '//localhost:' + window.location.port + '/' + item.urlPath;
             var playSchemaUrl = playerUrl + '?_schema=' + schemaUrl + '&_mode=dev';
 
             return '<a class="js-schema" data-url-path="' + item.urlPath + '" data-file="' + item.file + '" target="_blank" data-balloon-pos="right" aria-label="' + item.file + '" href="' + playSchemaUrl + '">' + item.title + '</a>';

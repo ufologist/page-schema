@@ -1,0 +1,39 @@
+{
+    "$schema": "https://houtai.baidu.com/v2/schemas/page.json",
+    "title": "富文本编辑器",
+    "body": [
+        {
+            "type": "form",
+            "api": "https://houtai.baidu.com/api/mock2/saveForm?waitSeconds=2",
+            "title": "Form elements",
+            "controls": [
+                {
+                    "type": "text",
+                    "name": "test",
+                    "label": "文本(输入 test 可以禁用富文本(UEditor))"
+                },
+                {
+                    "name": "html2",
+                    "type": "ext-wysiwyg",
+                    "label": "富文本(UEditor)",
+                    "value": "<p>Just do <code>IT</code></p>",
+                    "disabledOn": "data.test == 'test'",
+                    "ueditorOptions": {
+                        "config": {
+                            "_imageUploadUrl": "/api/upload-image",
+                            "_scrawlUploadUrl": "/api/upload-scrawl",
+                            "_videoUploadUrl": "/api/upload-video",
+                            "_fileUploadUrl": "/api/upload-file"
+                        }
+                    }
+                },
+                {
+                    "name": "html",
+                    "type": "rich-text",
+                    "label": "富文本(Froala Editor)",
+                    "value": "<p>Just do <code>IT</code></p>"
+                }
+            ]
+        }
+    ]
+}

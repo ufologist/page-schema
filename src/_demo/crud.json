@@ -457,6 +457,11 @@
                             "data": {
                                 "id": "${id}"
                             }
+                        },
+                        "feedback": {
+                            "title": "操作成功",
+                            "body": "已删除",
+                            "actions": []
                         }
                     }
                 ]
